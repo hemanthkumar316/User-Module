@@ -1,0 +1,122 @@
+import React, { useState, useEffect } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+const Updatesignupform = () => {
+  const userId = useParams().id
+  const [formvalues, setFormvalues] = useState({ username: '', email: '', password: '', number: '', state: '', city: '', checkbox: '' })
+  const [submitted, setSubmitted] = useState(false)
+  const changehandler = (e) => {
+    setFormvalues({ ...formvalues, [e.target.name]: e.target.value })
+  }
+  const submithandler = (e) => {
+    e.preventDefault()
+    console.log(formvalues)
+    axios.put(`http://localhost:5000/task/user/${userId}`, formvalues)
+      .then(response => setSubmitted(true))
+      .catch(err => console.log(err))
+  }
+  useEffect(() => {
+    axios.get(`http://localhost:5000/task/user/${userId}`)
+      .then(response => setFormvalues(response.data))
+      .catch(err => console.log(err))
+
+  }, [])
+
+  return (
+    <div>
+      {submitted ? <><Navigate to='/store' /></> :
+        <>
+          <pre>{JSON.stringify(formvalues)}</pre>
+          <section className="h-100 h-custom gradient-custom-2" style={{ backgroundColor: 'skyblue' }}>
+            <div className="container py-5 h-50">
+              <div className="row">
+                <div className="col-12">
+                  <div className="card">
+                    <div className="card-body p-0">
+                      <form onSubmit={submithandler}>
+                        <h1 className='text-uppercase text-center  text-white bg-secondary'> Update Signup form</h1>
+                        <div className="row g-0">
+                          <div className="col">
+                            <div className="p-3">
+                              <h2 className="text-uppercase text-center ">Update an account</h2><hr></hr>
+                              <div className="row">
+                                <div className="col-md-6 mb-1 pb-1">
+                                  <div className="form-group mb-4">
+                                    <input type="text" className=" form-control form-control-lg" name='username' value={formvalues.username} onChange={changehandler} />
+                                    <label className="form-label">Name</label>
+
+                                  </div>
+                                </div>
+                                <div className="col-md-6 mb-1 pb-1">
+                                  <div className="form-group mb-4">
+                                    <input type="text" className="form-control form-control-lg" name='email' value={formvalues.email} onChange={changehandler} />
+                                    <label className="form-label">Email</label>
+
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="row">
+                                <div className="col-md-6 mb-1 pb-1">
+                                  <div className="form-group mb-4">
+                                    <input type="password" className=" form-control form-control-lg" name='password' value={formvalues.password} onChange={changehandler} />
+                                    <label className="form-label">Password</label>
+
+                                  </div>
+                                </div>
+                                <div className="col-md-6 mb-1 pb-1">
+                                  <div className="form-group mb-4">
+                                    <input type="text" className="form-control form-control-lg" name='number' value={formvalues.number} onChange={changehandler} />
+                                    <label className="form-label">Mobile Number</label>
+
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+                              <div className="row">
+                                <div className="col-md-6 mb-4 pb-2 mb-md-0 pb-md-0">
+
+                                  <div className="form-outline">
+                                    <input type="text" className="form-control form-control-lg" name='state' value={formvalues.state} onChange={changehandler} />
+                                    <label className="form-label">State</label>
+
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className="form-outline">
+                                    <input type="text" className="form-control form-control-lg" name='city' value={formvalues.city} onChange={changehandler} />
+                                    <label className="form-label"> City</label>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="form-check d-flex justify-content-start  pb-2">
+                                <input className="form-check-input me-5" type="checkbox" name='checkbox' value='checkbox' onChange={changehandler} />
+                                <label className="form-check-label-black" >
+                                  I  Accept the <a href="#!" className="text-black"><u>Terms and Conditions</u></a> of your
+                                  site.
+                                </label>
+
+                              </div>
+                              <button type="submit" className="btn btn-success  btn-lg">Register</button>
+                              <p className="text-center text-muted mb-0">Have already an account? <Link to='/login'
+                                className="fw-bold text-body"><u>Login here</u></Link></p>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>}
+
+    </div>
+  )
+}
+
+export default Updatesignupform
